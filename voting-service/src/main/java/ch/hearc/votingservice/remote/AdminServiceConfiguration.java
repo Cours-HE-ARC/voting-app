@@ -1,13 +1,24 @@
 package ch.hearc.votingservice.remote;
 
+import ch.hearc.votingservice.api.jms.impl.JmsMessageListenerImpl;
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Configuration
 public class AdminServiceConfiguration {
+
+    Logger logger = LoggerFactory.getLogger(AdminServiceConfiguration.class);
+
+    @Autowired
+    private EurekaClient eurekaClient;
 
     @Value("${admin.service.url}")
     String adminServiceUrl;
@@ -18,6 +29,21 @@ public class AdminServiceConfiguration {
      */
     @Bean
     public RestClient adminServiceClient(){
-        return RestClient.create(adminServiceUrl);
+        String adminUrl = getAdminServiceUrl();
+        return RestClient.create(adminUrl);
+    }
+
+    private String getAdminServiceUrl(){
+        logger.info("Resolving admin service location");
+
+        InstanceInfo adminService = eurekaClient
+                .getApplication("admin-service")
+                .getInstances()
+                .get(0);
+
+        String hostName = adminService.getHostName();
+        int port = adminService.getPort();
+        logger.info("Admin service, host: " + hostName + ", port: " + port);
+        return "http://" + hostName + ":" + port;
     }
 }
