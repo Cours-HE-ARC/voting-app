@@ -1,7 +1,6 @@
 package ch.hearc.votingservice.remote.models;
 
 
-
 import java.util.List;
 
 /**
