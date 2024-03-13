@@ -1,6 +1,6 @@
 package ch.hearc.votingservice.remote;
 
-import ch.hearc.votingservice.api.jms.impl.JmsMessageListenerImpl;
+
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import org.slf4j.Logger;
