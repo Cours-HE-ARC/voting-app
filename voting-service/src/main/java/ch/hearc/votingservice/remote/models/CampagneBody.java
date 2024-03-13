@@ -19,6 +19,7 @@ public class CampagneBody {
         this.objets = objets;
     }
 
+    public CampagneBody(){}
     public String getNom() {
         return nom;
     }

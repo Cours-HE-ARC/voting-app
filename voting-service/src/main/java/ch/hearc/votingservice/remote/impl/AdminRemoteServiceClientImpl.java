@@ -6,6 +6,7 @@ import ch.hearc.votingservice.remote.models.ListCampagnesResponseBody;
 import ch.hearc.votingservice.shared.CampagneStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,48 +18,40 @@ import java.util.Optional;
 @Service
 public class AdminRemoteServiceClientImpl implements AdminRemoteServiceClient {
 
-    @Autowired
-    RestClient adminServiceClient;
 
+    @Autowired
+    AdminRestClient adminRestClient;
 
 
     @Override
     public ListCampagnesResponseBody getCampagnesOuvertes() {
-        ListCampagnesResponseBody campagnes = adminServiceClient.get()
-                .uri("/campagne?status=OPENED")
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {});
 
-        return campagnes;
+        ResponseEntity<ListCampagnesResponseBody> campagnesResponseBody = adminRestClient.getcampagnesOuvertes();
+
+        return campagnesResponseBody.getBody();
     }
 
     @Override
-    public Boolean isCampagneExistAndOuverte(String campagneIdentifiant) {
+    public Boolean isCampagneExistAndOuverte(String campagneIdentifiant) throws Error400Exception{
 
-        ResponseEntity<CampagneResponseBody> campagneResponse = adminServiceClient.get()
-                .uri("/campagne/" + campagneIdentifiant)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    throw new Error400Exception();
-                })
-                .toEntity(CampagneResponseBody.class);
 
-        return campagneResponse.getBody().getStatus().equals(CampagneStatus.OPENED);
+
+        ResponseEntity<Optional<CampagneResponseBody>> responseEntity = adminRestClient.getCampagneByIdentifiant(campagneIdentifiant);
+
+        if(responseEntity.getStatusCode().equals(HttpStatus.NOT_FOUND)){
+            throw new Error400Exception("Entity not Found");
+        }else{
+            return responseEntity.getBody().get().getStatus().equals(CampagneStatus.OPENED);
+        }
 
     }
 
     @Override
     public Optional<CampagneResponseBody> getCampagneByIdentifiant(String identifiant){
 
-        ResponseEntity<CampagneResponseBody> campagneResponse = adminServiceClient.get()
-                .uri("/campagne/" + identifiant)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    throw new Error400Exception();
-                })
-                .toEntity(CampagneResponseBody.class);
+        ResponseEntity<Optional<CampagneResponseBody>> responseEntity = adminRestClient.getCampagneByIdentifiant(identifiant);
 
-        return Optional.of(campagneResponse.getBody());
+        return responseEntity.getBody();
 
     }
 }
