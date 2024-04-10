@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-@Configuration
+//@Configuration
 public class AdminServiceConfiguration {
 
     Logger logger = LoggerFactory.getLogger(AdminServiceConfiguration.class);
