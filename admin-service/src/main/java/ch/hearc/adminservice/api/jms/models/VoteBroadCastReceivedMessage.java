@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public class VoteBroadCastMessage {
+public class VoteBroadCastReceivedMessage {
 
     @NotEmpty
     @NotNull
@@ -15,7 +15,7 @@ public class VoteBroadCastMessage {
     @Size(min = 3)
     private String objetIdentifiant;
 
-    public VoteBroadCastMessage(String campagneIdentifiant, String objetIdentifiant) {
+    public VoteBroadCastReceivedMessage(String campagneIdentifiant, String objetIdentifiant) {
         this.campagneIdentifiant = campagneIdentifiant;
         this.objetIdentifiant = objetIdentifiant;
     }

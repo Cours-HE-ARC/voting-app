@@ -5,6 +5,14 @@ public class ObjetBody {
     //Identifiant métier de l'objet
     private String identifiant;
 
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public void setIdentifiant(String identifiant) {
+        this.identifiant = identifiant;
+    }
+
     public ObjetBody(String nom, String identifiant) {
         this.nom = nom;
         this.identifiant = identifiant;
@@ -16,5 +24,8 @@ public class ObjetBody {
 
     public String getIdentifiant() {
         return identifiant;
+    }
+
+    public ObjetBody() {
     }
 }

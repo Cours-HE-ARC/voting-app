@@ -1,7 +1,7 @@
 package ch.hearc.adminservice.service.impl;
 
-import ch.hearc.adminservice.jms.models.VoteBroadCastMessage;
 import ch.hearc.adminservice.jms.JmsMessageProducteur;
+import ch.hearc.adminservice.jms.models.VoteBroadCastMessage;
 import ch.hearc.adminservice.repository.AutorisationRepository;
 import ch.hearc.adminservice.repository.CampagneRespository;
 import ch.hearc.adminservice.repository.InvalidAttemptVotingRepository;
@@ -9,6 +9,7 @@ import ch.hearc.adminservice.repository.VoteRepository;
 import ch.hearc.adminservice.repository.entity.*;
 import ch.hearc.adminservice.service.VoteService;
 import ch.hearc.adminservice.service.models.Vote;
+import ch.hearc.adminservice.service.models.VoteBroadCast;
 import ch.hearc.adminservice.service.models.actions.VoteSubmitedResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,8 @@ public class VoteServiceImpl implements VoteService {
 
     }
 
-    public void publishVote(VoteBroadCastMessage message) throws JsonProcessingException {
-        jmsMessageProducteur.sendVoteBroadcat(message);
+    public void publishVote(VoteBroadCast message) throws JsonProcessingException {
+
+        jmsMessageProducteur.sendVoteBroadcat(message.toVoteBroadCastMessage());
     }
 }

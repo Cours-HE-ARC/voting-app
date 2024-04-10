@@ -7,11 +7,11 @@ import ch.hearc.adminservice.api.jms.deserializer.JsonDeserialisationException;
 import ch.hearc.adminservice.api.jms.deserializer.VoteJmsDeserializerMapper;
 import ch.hearc.adminservice.api.jms.models.DemandeReceivedMessage;
 import ch.hearc.adminservice.api.jms.models.SoumissionVoteMessage;
-import ch.hearc.adminservice.jms.models.VoteBroadCastMessage;
 import ch.hearc.adminservice.service.AutorisationService;
 import ch.hearc.adminservice.service.VoteService;
 import ch.hearc.adminservice.service.models.Demande;
 import ch.hearc.adminservice.service.models.Vote;
+import ch.hearc.adminservice.service.models.VoteBroadCast;
 import ch.hearc.adminservice.service.models.actions.ReceptionnerDemandeResult;
 import ch.hearc.adminservice.service.models.actions.VoteSubmitedResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -95,7 +95,7 @@ public class JmsMessageListenerImpl implements JmsMessageListener {
 
                 //Si traitement du vote ok
                 if(voteSubmitedResult.getSuccess()){
-                    voteService.publishVote(new VoteBroadCastMessage(vote.getCampagneIdentifiant(),vote.getObjetIdentifiant()));
+                    voteService.publishVote(new VoteBroadCast(vote.getCampagneIdentifiant(),vote.getObjetIdentifiant()));
                 }
 
             } catch (JsonDeserialisationException e) {

@@ -1,5 +1,6 @@
-package ch.hearc.adminservice.service.models;
+package ch.hearc.adminservice.jms.models;
 
+import ch.hearc.adminservice.service.models.VoteBroadCast;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,6 +20,8 @@ public class VoteBroadCastMessage {
         this.campagneIdentifiant = campagneIdentifiant;
         this.objetIdentifiant = objetIdentifiant;
     }
+
+
 
     public String getCampagneIdentifiant() {
         return campagneIdentifiant;
