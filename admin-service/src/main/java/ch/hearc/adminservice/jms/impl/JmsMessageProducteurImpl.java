@@ -4,7 +4,9 @@ package ch.hearc.adminservice.jms.impl;
 import ch.hearc.adminservice.jms.JmsMessageProducteur;
 import ch.hearc.adminservice.jms.models.AutorisationMessage;
 import ch.hearc.adminservice.jms.models.RefusAutorisationMessage;
+
 import ch.hearc.adminservice.jms.models.VoteBroadCastMessage;
+import ch.hearc.adminservice.service.models.VoteBroadCast;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.jms.TextMessage;

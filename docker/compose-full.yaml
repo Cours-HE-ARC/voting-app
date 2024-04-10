@@ -1,5 +1,17 @@
 services:
 
+  service-registry:
+    build:
+      context: ../service-registry
+      dockerfile: ../service-registry/Dockerfile
+    image: service-registry
+    environment:
+      - SERVER_PORT=8761
+    ports:
+      - 8761:8761
+    networks:
+      - voting-app
+
   admin-service:
     container_name: admin-service
     build:
@@ -10,6 +22,8 @@ services:
       - ACTIVEMQ_URI=tcp://active-mq:61616
       - SERVER_PORT=8080
       - MYSQL_DB=jdbc:mysql://admin-db:3306/admin-service?createDatabaseIfNotExist=true
+      - EUREKA_URI=http://service-registry:8761/eureka
+      - SPRING_PROFILES_ACTIVE=mysql
     ports:
       - 8880:8080
     networks:
@@ -17,6 +31,7 @@ services:
     depends_on:
       - active-mq
       - admin-service-db
+      - service-registry
 
   voting-service:
     container_name: voting-service
@@ -29,6 +44,8 @@ services:
       - ADMIN_SERVICE_URI=http://admin-service:8880
       - SERVER_PORT=8081
       - MYSQL_DB=jdbc:mysql://voting-db:3306/voting-service?createDatabaseIfNotExist=true
+      - EUREKA_URI=http://service-registry:8761/eureka
+      - SPRING_PROFILES_ACTIVE=mysql
     ports:
       - 8881:8081
     networks:
@@ -36,6 +53,7 @@ services:
     depends_on:
       - active-mq
       - voting-service-db
+      - service-registry
 
   active-mq:
     image: apache/activemq-artemis:latest-alpine
