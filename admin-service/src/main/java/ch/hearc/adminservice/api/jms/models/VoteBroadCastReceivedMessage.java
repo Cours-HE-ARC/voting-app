@@ -1,4 +1,4 @@
-package ch.hearc.adminservice.service.models;
+package ch.hearc.adminservice.api.jms.models;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
