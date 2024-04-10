@@ -18,7 +18,7 @@ public class ListCampagnesResponseBody {
         this.campagnes = campagnes;
     }
 
-
+    public ListCampagnesResponseBody(){}
 
     public Integer getNbCampagnes() {
         return total;
