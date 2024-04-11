@@ -3,7 +3,7 @@ services:
   service-registry:
     build:
       context: ../service-registry
-      dockerfile: ../service-registry/Dockerfile
+      dockerfile: ../service-registry/build.Dockerfile
     image: service-registry
     environment:
       - SERVER_PORT=8761
@@ -16,7 +16,7 @@ services:
 
     build:
       context: ../admin-service
-      dockerfile: ../admin-service/Dockerfile
+      dockerfile: ../admin-service/build.Dockerfile
     image: admin-service
     environment:
       - ACTIVEMQ_URI=tcp://active-mq:61616
@@ -40,7 +40,7 @@ services:
   voting-service:
     build:
       context: ../voting-service
-      dockerfile: ../voting-service/Dockerfile
+      dockerfile: ../voting-service/build.Dockerfile
     image: voting-service
     environment:
       - ACTIVEMQ_URI=tcp://active-mq:61616

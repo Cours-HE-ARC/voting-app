@@ -1,0 +1,105 @@
+services:
+
+  service-registry:
+    build:
+      context: ../service-registry
+      dockerfile: ../service-registry/jar.Dockerfile
+    image: service-registry
+    environment:
+      - SERVER_PORT=8761
+    ports:
+      - 8761:8761 #expose eureka registry port to host
+    networks:
+      - voting-app
+
+  admin-service:
+
+    build:
+      context: ../admin-service
+      dockerfile: ../admin-service/jar.Dockerfile
+    image: admin-service
+    environment:
+      - ACTIVEMQ_URI=tcp://active-mq:61616
+      - SERVER_PORT=8080
+      - MYSQL_DB=jdbc:mysql://admin-service-db:3306/admin-service?createDatabaseIfNotExist=true
+      - EUREKA_URI=http://service-registry:8761/eureka
+      - SPRING_PROFILES_ACTIVE=mysql
+    ports:
+      - 8080
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
+    networks:
+      - voting-app
+    depends_on:
+      - active-mq
+      - admin-service-db
+      - service-registry
+
+  voting-service:
+    build:
+      context: ../voting-service
+      dockerfile: ../voting-service/jar.Dockerfile
+    image: voting-service
+    environment:
+      - ACTIVEMQ_URI=tcp://active-mq:61616
+      - SERVER_PORT=8080
+      - MYSQL_DB=jdbc:mysql://voting-service-db:3306/voting-service?createDatabaseIfNotExist=true
+      - EUREKA_URI=http://service-registry:8761/eureka
+      - SPRING_PROFILES_ACTIVE=mysql
+    ports:
+      - 8080
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
+    networks:
+      - voting-app
+    depends_on:
+      - active-mq
+      - voting-service-db
+      - service-registry
+
+  active-mq:
+    image: apache/activemq-artemis:latest-alpine
+    ports:
+      - 61616
+      - 8161
+    environment:
+      - ARTEMIS_USER=mq
+      - ARTEMIS_PASSWORD=mq
+    networks:
+      - voting-app
+
+  admin-service-db:
+    image: mysql:8.2.0-oracle
+    ports:
+      - 3306
+    volumes:
+      - "mysql_admin:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    restart: always
+    networks:
+      - voting-app
+
+  voting-service-db:
+    image: mysql:8.2.0-oracle
+    ports:
+      - 3306
+    volumes:
+      - "mysql_voting:/var/lib/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    restart: always
+    networks:
+      - voting-app
+
+volumes:
+  mysql_admin:
+  mysql_voting:
+
+networks:
+  voting-app:
+    driver: bridge
