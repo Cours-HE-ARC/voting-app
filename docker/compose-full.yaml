@@ -8,12 +8,12 @@ services:
     environment:
       - SERVER_PORT=8761
     ports:
-      - 8761:8761
+      - 8761:8761 #expose eureka registry port to host
     networks:
       - voting-app
 
   admin-service:
-    container_name: admin-service
+
     build:
       context: ../admin-service
       dockerfile: ../admin-service/Dockerfile
@@ -21,11 +21,15 @@ services:
     environment:
       - ACTIVEMQ_URI=tcp://active-mq:61616
       - SERVER_PORT=8080
-      - MYSQL_DB=jdbc:mysql://admin-db:3306/admin-service?createDatabaseIfNotExist=true
+      - MYSQL_DB=jdbc:mysql://admin-service-db:3306/admin-service?createDatabaseIfNotExist=true
       - EUREKA_URI=http://service-registry:8761/eureka
       - SPRING_PROFILES_ACTIVE=mysql
     ports:
-      - 8880:8080
+      - 8080
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
     networks:
       - voting-app
     depends_on:
@@ -34,20 +38,22 @@ services:
       - service-registry
 
   voting-service:
-    container_name: voting-service
     build:
       context: ../voting-service
       dockerfile: ../voting-service/Dockerfile
     image: voting-service
     environment:
       - ACTIVEMQ_URI=tcp://active-mq:61616
-      - ADMIN_SERVICE_URI=http://admin-service:8880
-      - SERVER_PORT=8081
-      - MYSQL_DB=jdbc:mysql://voting-db:3306/voting-service?createDatabaseIfNotExist=true
+      - SERVER_PORT=8080
+      - MYSQL_DB=jdbc:mysql://voting-service-db:3306/voting-service?createDatabaseIfNotExist=true
       - EUREKA_URI=http://service-registry:8761/eureka
       - SPRING_PROFILES_ACTIVE=mysql
     ports:
-      - 8881:8081
+      - 8080
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
     networks:
       - voting-app
     depends_on:
@@ -57,10 +63,9 @@ services:
 
   active-mq:
     image: apache/activemq-artemis:latest-alpine
-    container_name: active-mq
     ports:
-      - "61616:61616"
-      - "8161:8161"
+      - 61616
+      - 8161
     environment:
       - ARTEMIS_USER=mq
       - ARTEMIS_PASSWORD=mq
@@ -69,9 +74,8 @@ services:
 
   admin-service-db:
     image: mysql:8.2.0-oracle
-    container_name: admin-db
     ports:
-      - "3380:3306"
+      - 3306
     volumes:
       - "mysql_admin:/var/lib/mysql"
     environment:
@@ -82,9 +86,8 @@ services:
 
   voting-service-db:
     image: mysql:8.2.0-oracle
-    container_name: voting-db
     ports:
-      - "3381:3306"
+      - 3306
     volumes:
       - "mysql_voting:/var/lib/mysql"
     environment:
