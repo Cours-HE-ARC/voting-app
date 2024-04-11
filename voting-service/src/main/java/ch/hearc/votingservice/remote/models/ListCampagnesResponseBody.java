@@ -18,8 +18,10 @@ public class ListCampagnesResponseBody {
 
     public ListCampagnesResponseBody(){}
 
-    public Integer getNbCampagnesl() {
+
+    public Integer getNbCampagnes() {
         return nbCampagnes;
+
     }
 
     public List<CampagneBody> getCampagnes() {
