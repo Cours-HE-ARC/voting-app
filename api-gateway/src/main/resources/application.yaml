@@ -2,6 +2,10 @@
 spring:
   application:
     name: api-gateway
+  boot:
+    admin:
+      client:
+        url: ${ADMIN_SERVER_URI:http://localhost:11111}
 server:
   port: 9999
 #Paramétrage avec eureka discovery
@@ -18,3 +22,6 @@ management:
     web:
       exposure:
         include: "*"
+
+
+
