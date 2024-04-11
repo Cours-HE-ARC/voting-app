@@ -18,7 +18,7 @@ public class ListCampagnesResponseBody {
 
     public ListCampagnesResponseBody(){}
 
-    public Integer getNbCampagnesl() {
+    public Integer getNbCampagnes() {
         return nbCampagnes;
     }
 
@@ -26,11 +26,5 @@ public class ListCampagnesResponseBody {
         return campagnes;
     }
 
-    public void setCampagnes(List<CampagneBody> campagnes) {
-        this.campagnes = campagnes;
-    }
 
-    public void setNbCampagnes(Integer nbCampagnes) {
-        this.nbCampagnes = nbCampagnes;
-    }
 }

@@ -13,7 +13,9 @@ services:
       - voting-app
 
   admin-service:
-    container_name: admin-service
+    deploy:
+      mode: replicated
+      replicas: 2
     build:
       context: ../admin-service
       dockerfile: ../admin-service/Dockerfile
@@ -34,7 +36,9 @@ services:
       - service-registry
 
   voting-service:
-    container_name: voting-service
+    deploy:
+      mode: replicated
+      replicas: 2
     build:
       context: ../voting-service
       dockerfile: ../voting-service/Dockerfile
