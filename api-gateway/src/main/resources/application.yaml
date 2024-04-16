@@ -1,7 +1,10 @@
 #Paranmétrage applicatif de base
 spring:
+  profiles:
+    active: security-header, dsl
   application:
     name: api-gateway
+
 server:
   port: 9999
 #Paramétrage avec eureka discovery

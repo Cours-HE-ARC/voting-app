@@ -1,0 +1,17 @@
+spring:
+  #Paramétrage des routes
+  cloud:
+    gateway:
+      routes:
+        - id: admin-service
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+        - id: voting-service
+          uri: lb://VOTING-SERVICE
+          predicates:
+            - Path=/voting/**
+          filters:
+            - StripPrefix=1
