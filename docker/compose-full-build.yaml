@@ -1,5 +1,17 @@
 services:
 
+  voting-app-admin:
+    build:
+      context: ../voting-app-admin
+      dockerfile: ../voting-app-admin/build.Dockerfile
+    image: voting-app-admin
+    environment:
+      - SERVER_PORT=8080
+    ports:
+      - 11111:8080 #expose eureka registry port to host
+    networks:
+      - voting-app
+
   api-gateway:
     build:
       context: ../api-gateway
@@ -39,6 +51,8 @@ services:
       - MYSQL_DB=jdbc:mysql://admin-service-db:3306/admin-service?createDatabaseIfNotExist=true
       - EUREKA_URI=http://service-registry:8761/eureka
       - SPRING_PROFILES_ACTIVE=mysql
+      - ADMIN_SERVER_URI=http://voting-app-admin:8080
+
     expose:
       - 8080
     deploy:
@@ -63,6 +77,8 @@ services:
       - MYSQL_DB=jdbc:mysql://voting-service-db:3306/voting-service?createDatabaseIfNotExist=true
       - EUREKA_URI=http://service-registry:8761/eureka
       - SPRING_PROFILES_ACTIVE=mysql
+      - ADMIN_SERVER_URI=http://voting-app-admin:8080
+
     expose:
       - 8080
     deploy:
